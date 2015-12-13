@@ -4,16 +4,22 @@ buildscript {
     }
     repositories {
         mavenCentral()
+        maven { url 'http://repo.spring.io/plugins-release' }
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}") 
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath 'org.springframework.build.gradle:propdeps-plugin:0.0.7'
     }
 }
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
-apply plugin: 'spring-boot' 
+apply plugin: 'spring-boot'
+apply plugin: 'propdeps'
+apply plugin: 'propdeps-maven'
+apply plugin: 'propdeps-idea'
+apply plugin: 'propdeps-eclipse'
 
 jar {
     baseName = 'gcalcis'
@@ -31,14 +37,18 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-actuator')
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.data:spring-data-rest-hal-browser')
+    compile("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.6.0")
     compile('org.springframework.boot:spring-boot-starter-web')
     compile('org.springframework.boot:spring-boot-devtools')
     compile 'com.google.api-client:google-api-client:1.21.0'
     compile 'com.google.oauth-client:google-oauth-client-jetty:1.21.0'
     compile 'com.google.apis:google-api-services-calendar:v3-rev125-1.20.0'
     runtime('com.h2database:h2')
-    testCompile('org.springframework.boot:spring-boot-starter-test') 
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+    optional "org.springframework.boot:spring-boot-configuration-processor"
 }
+
+compileJava.dependsOn(processResources)
 
 
 eclipse {
